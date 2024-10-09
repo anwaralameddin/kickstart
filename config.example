@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+export AUTHOR="AUTHOR"
+export EMAIL="Email"
+
+export PDF_PREVIEWER="zathura %O %S"

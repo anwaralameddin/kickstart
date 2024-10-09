@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+
+export BOLD="\x1b[;1m"
+export RESET="\x1b[m"
+export RED="\x1b[91m"
+export GREEN="\x1b[92m"
+export YELLOW="\x1b[93m"
+export BLUE="\x1b[94m"
+
+# Usage function
+usage() {
+  echo "Usage: $0 <command> <command-args>"
+  echo
+  echo "Commands:"
+  echo "    help          Show this help message"
+  echo "    latex         Create a new LaTeX project"
+}
+
+# Logging functions
+info() {
+  echo -e "$BOLD${BLUE}INFO:$RESET $*" >&2
+}
+export -f info
+
+warn () {
+  echo -e "$BOLD${YELLOW}WARNING:$RESET $*" >&2
+}
+export -f warn
+
+err () {
+  echo -e "$BOLD${RED}ERROR:$RESET $*" >&2
+  exit 1
+}
+export -f err
+
+success() {
+  title="$1"
+  echo -e "$BOLD${GREEN}$title$RESET" >&2
+  shift
+  if [ $# -gt 0 ]; then
+    echo -e "$*" >&2
+  fi
+}
+export -f success
+
+# Git initialisation function
+git_init() {
+  # Initialise a new git repository
+  git init > /dev/null
+  # Commit the changes
+  git add .
+  # `git commit` might fail if the user has not configured their name and email
+  if ! git config --get user.name > /dev/null; then
+    warn "Could not commit changes. Please configure your name in git."
+  elif ! git config --get user.name > /dev/null; then
+    warn "Could not commit changes. Please configure your email in git."
+  else
+    git commit -m "Initial commit"
+    git branch -M main
+  fi
+}
+export -f git_init

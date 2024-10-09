@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+ROOT_SCRIPT="$(readlink -f "$0")"
+export ROOT_SCRIPT
+ROOT_DIR="$(dirname "$ROOT_SCRIPT")"
+export ROOT_DIR
+
+# shellcheck source=/dev/null
+source "$ROOT_DIR/src/common"
+
+parse_args(){
+  # Parse command line arguments
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -h|--help)
+        usage
+        exit 0
+        ;;
+      latex)
+        shift
+        "$ROOT_DIR/latex/kickstart-latex" "$@"
+        exit $?
+        ;;
+      -*)
+        usage
+        err "Unknown option: $1"
+        ;;
+      *)
+        usage
+        err "Unknown command: $1"
+        ;;
+    esac
+  done
+
+  usage
+  err "No command provided."
+}
+
+parse_args "$@"

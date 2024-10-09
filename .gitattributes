@@ -1,0 +1,21 @@
+*          text=auto eol=lf working-tree-encoding=UTF-8
+
+*.pdf      binary
+
+*.bib      diff=bibtex
+*.c        diff=cpp
+*.cc       diff=cpp
+*.cpp      diff=cpp
+*.go       diff=golang
+*.h        diff=cpp
+*.hpp      diff=cpp
+*.json     diff=json
+*.md       diff=markdown
+*.py       diff=python
+*.rs       diff=rust
+*.sh       diff=bash
+*.sh       diff=bash
+*.tex      diff=tex
+*.toml     diff=toml
+*.yaml     diff=yaml
+*.yml      diff=yaml

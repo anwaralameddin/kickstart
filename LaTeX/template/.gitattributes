@@ -1,0 +1,6 @@
+*          text=auto eol=lf working-tree-encoding=UTF-8
+
+*.pdf      binary
+
+*.bib      diff=bibtex
+*.tex      diff=tex

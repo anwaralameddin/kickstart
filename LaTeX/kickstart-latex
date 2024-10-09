@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+# Error handling and cleanup
+set -Eeuo pipefail
+trap 'echo -e "${BOLD}${RED}ERROR: $0 # $LINENO: Command \`${BASH_COMMAND}\` filed with exit code $?.${RESET}" >&2' ERR
+
+# shellcheck source=/dev/null
+source "$ROOT_DIR/src/common"
+# shellcheck source=/dev/null
+source "$ROOT_DIR/config"
+
+usage() {
+    echo "Usage: $ROOT_SCRIPT latex <project-name>"
+    echo
+    echo "Create a new LaTeX project."
+}
+
+
+# Check if the user provided a name for the project
+if [ $# -eq 0 ]; then
+    usage
+    err "No project name provided."
+fi
+
+NAME="$*"
+
+# Create a new directory for the project
+mkdir "$NAME" || err "Directory '$NAME' already exists."
+pushd "$NAME" > /dev/null || err "Could not change to directory '$NAME'."
+
+# Copy the template files into the project directory
+cp -r "$ROOT_DIR"/latex/template/* .
+cp -r "$ROOT_DIR"/latex/template/.git* .
+cp "$ROOT_DIR"/latex/template/.latexmkrc .
+cp "$ROOT_DIR"/latex/template/.pre-commit-config.yaml .
+
+# Replace the placeholders in the template files
+sed -i "s/\\<PROJECT_NAME\\>/$NAME/g" main.tex Makefile
+sed -i "s/\\<AUTHOR\\>/$AUTHOR/g" main.tex
+sed -i "s/\\<EMAIL\\>/$EMAIL/g" main.tex
+sed -i "s/\\<PDF_PREVIEWER\\>/$PDF_PREVIEWER/g" .latexmkrc
+
+# Initialise a new git repository
+git_init
+
+# Change back to the original directory
+popd > /dev/null
+
+success "Created new LaTeX project '$NAME'."
